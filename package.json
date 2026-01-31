@@ -1,0 +1,17 @@
+{
+  "name": "patchops-demo-vulnerable",
+  "version": "1.0.0",
+  "description": "Test repository with intentionally vulnerable dependencies",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "0.19.0",
+    "lodash": "4.17.15"
+  },
+  "keywords": ["demo", "vulnerable", "security"],
+  "author": "PatchOps Demo",
+  "license": "MIT"
+}
