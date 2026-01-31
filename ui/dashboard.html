@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PatchOps - Enterprise Security Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Premium Enterprise SaaS Design System */
+        :root {
+            /* Brand Colors */
+            --brand-primary: #0ea5e9;
+            --brand-primary-hover: #0284c7;
+            --brand-primary-light: #e0f2fe;
+            --brand-primary-dark: #0c4a6e;
+            
+            /* Neutral Palette */
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --gray-900: #0f172a;
+            
+            /* Severity Colors (reserved for vulnerabilities only) */
+            --severity-critical: #dc2626;
+            --severity-high: #ea580c;
+            --severity-medium: #d97706;
+            --severity-low: #65a30d;
+            
+            /* Status Colors */
+            --status-success: #059669;
+            --status-warning: #d97706;
+            --status-error: #dc2626;
+            --status-info: #0ea5e9;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            
+            /* Spacing Scale */
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+            --space-10: 2.5rem;
+            --space-12: 3rem;
+            --space-16: 4rem;
+            --space-20: 5rem;
+            
+            /* Typography */
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            
+            --line-height-tight: 1.25;
+            --line-height-normal: 1.5;
+            --line-height-relaxed: 1.625;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: var(--line-height-normal);
+            font-size: var(--font-size-sm);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Top Navigation Bar */
+        .top-bar {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 var(--space-6);
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .logo {
+            font-size: var(--font-size-xl);
+            font-weight: 700;
+            color: var(--brand-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .logo::before {
+            content: "";
+            width: 28px;
+            height: 28px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%230ea5e9" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>') center/contain no-repeat;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+        
+        .repo-control {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        
+        .add-repo-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-md);
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 20px;
+            font-weight: 300;
+        }
+        
+        .add-repo-btn:hover {
+            background: var(--brand-primary-hover);
+            transform: scale(1.05);
+        }
+
+        .repo-selector, .time-range {
+            background: white;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--font-size-sm);
+            color: var(--gray-700);
+            min-width: 160px;
+            transition: all 0.2s ease;
+        }
+
+        .repo-selector:focus, .time-range:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-primary-light);
+        }
+
+        .search-box {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            padding: var(--space-2) var(--space-3);
+            width: 280px;
+            font-size: var(--font-size-sm);
+            transition: all 0.2s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            background: white;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-primary-light);
+        }
+
+        .user-menu {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .user-menu:hover {
+            background: var(--brand-primary-hover);
+            transform: scale(1.05);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 64px);
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            width: 256px;
+            background: white;
+            border-right: 1px solid var(--gray-200);
+            padding: var(--space-6) 0;
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: var(--space-8);
+        }
+
+        .nav-section-title {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0 var(--space-6);
+            margin-bottom: var(--space-3);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-6);
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+
+        .nav-item.active {
+            background: var(--brand-primary-light);
+            color: var(--brand-primary-dark);
+            font-weight: 600;
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--brand-primary);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-style: normal;
+        }
+        
+        .nav-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Main Content Area */
+        .content {
+            flex: 1;
+            display: flex;
+            gap: var(--space-6);
+            padding: var(--space-6);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* KPI Cards - Unified Styling */
+        .kpi-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-4);
+            margin-bottom: var(--space-6);
+        }
+
+        .kpi-card {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            padding: var(--space-5);
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .kpi-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-3);
+        }
+
+        .kpi-label {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .kpi-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .kpi-indicator.critical { background: var(--severity-critical); }
+        .kpi-indicator.warning { background: var(--status-warning); }
+        .kpi-indicator.success { background: var(--status-success); }
+        .kpi-indicator.info { background: var(--brand-primary); }
+
+        .kpi-number {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            line-height: var(--line-height-tight);
+        }
+
+        .kpi-change {
+            font-size: var(--font-size-xs);
+            color: var(--gray-500);
+            margin-top: var(--space-1);
+        }
+
+        /* Left Pane - Dependency Graph */
+        .left-pane {
+            flex: 0 0 58%;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        .graph-container {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .graph-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-5);
+        }
+
+        .graph-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .graph-subtitle {
+            font-size: var(--font-size-sm);
+            color: var(--gray-500);
+            margin-top: var(--space-1);
+        }
+
+        .filter-chips {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: var(--gray-100);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-chip:hover {
+            background: var(--gray-200);
+        }
+
+        .filter-chip.active {
+            background: var(--brand-primary);
+            color: white;
+            border-color: var(--brand-primary);
+        }
+
+        /* Enhanced Dependency Graph */
+        .dependency-graph {
+            flex: 1;
+            background: radial-gradient(circle at 30% 40%, #f0f9ff 0%, #ffffff 60%);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            position: relative;
+            min-height: 550px;
+            height: 550px;
+            overflow: hidden;
+        }
+
+        .graph-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 1px 1px, #cbd5e1 1px, transparent 0);
+            background-size: 24px 24px;
+            opacity: 0.25;
+        }
+
+        .graph-legend {
+            position: absolute;
+            top: var(--space-4);
+            right: var(--space-4);
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-md);
+            padding: var(--space-3);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+            font-size: var(--font-size-xs);
+            color: var(--gray-600);
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.critical { background: var(--severity-critical); }
+        .legend-dot.high { background: var(--severity-high); }
+        .legend-dot.medium { background: var(--severity-medium); }
+        .legend-dot.low { background: var(--severity-low); }
+
+        /* Enhanced Graph Nodes */
+        .graph-node {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            border: 4px solid white;
+            text-align: center;
+            padding: 12px;
+            line-height: 1.2;
+        }
+        
+        .graph-node-icon {
+            width: 24px;
+            height: 24px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2.5;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .graph-node:hover {
+            transform: scale(1.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .graph-node.selected {
+            border-color: #0ea5e9;
+            border-width: 5px;
+            box-shadow: 0 0 0 8px rgba(14, 165, 233, 0.25), 0 12px 32px rgba(0, 0, 0, 0.3);
+            z-index: 20;
+            transform: scale(1.15);
+        }
+
+        .graph-node.dimmed {
+            opacity: 0.25;
+            transform: scale(0.85);
+            filter: grayscale(0.5);
+        }
+
+        .graph-node.critical {
+            background: var(--severity-critical);
+        }
+
+        .graph-node.critical.kev {
+            animation: pulse-kev 2s infinite;
+        }
+
+        .graph-node.high {
+            background: var(--severity-high);
+        }
+
+        .graph-node.medium {
+            background: var(--severity-medium);
+            color: white;
+        }
+
+        .graph-node.low {
+            background: var(--severity-low);
+        }
+
+        @keyframes pulse-kev {
+            0%, 100% { 
+                opacity: 1; 
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            }
+            50% { 
+                opacity: 0.85; 
+                box-shadow: 0 0 0 12px rgba(220, 38, 38, 0.15), 0 4px 16px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        /* Graph Edges */
+        .graph-edge {
+            position: absolute;
+            height: 2.5px;
+            background: linear-gradient(90deg, #cbd5e1 0%, #94a3b8 100%);
+            transform-origin: left center;
+            opacity: 0.4;
+            transition: all 0.3s ease;
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        .graph-edge.highlighted {
+            background: linear-gradient(90deg, #0ea5e9 0%, #06b6d4 100%);
+            opacity: 0.9;
+            height: 4px;
+            z-index: 2;
+            box-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: absolute;
+            background: var(--gray-900);
+            color: white;
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-xs);
+            white-space: nowrap;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Right Pane - Tabbed Detail Panel */
+        .right-pane {
+            flex: 0 0 42%;
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            max-height: calc(100vh - 128px);
+            min-width: 0;
+        }
+
+        .detail-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .package-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: var(--space-4);
+        }
+
+        .package-info h2 {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: var(--space-1);
+        }
+
+        .version-info {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+
+        .badges {
+            display: flex;
+            gap: var(--space-2);
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .badge.cve { 
+            background: rgba(220, 38, 38, 0.1); 
+            color: var(--severity-critical); 
+        }
+        
+        .badge.kev { 
+            background: rgba(234, 88, 12, 0.1); 
+            color: var(--severity-high);
+            animation: pulse-badge 2s infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            background: rgba(217, 119, 6, 0.1);
+            color: var(--status-warning);
+            padding: var(--space-2) var(--space-3);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .tab {
+            flex: 1;
+            padding: var(--space-4) var(--space-6);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--gray-600);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--gray-900);
+            background: var(--gray-50);
+        }
+
+        .tab.active {
+            color: var(--brand-primary);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--brand-primary);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            flex: 1;
+            padding: var(--space-6);
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Threat Score */
+        .threat-score {
+            margin-bottom: var(--space-6);
+        }
+
+        .threat-score-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-3);
+        }
+
+        .threat-score-label {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .threat-score-value {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: var(--severity-high);
+        }
+
+        .threat-meter {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-200);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-bottom: var(--space-3);
+        }
+
+        .threat-fill {
+            height: 100%;
+            background: var(--severity-high);
+            width: 85%;
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .threat-rationale {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            line-height: var(--line-height-relaxed);
+            background: var(--gray-50);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--severity-high);
+        }
+
+        /* Evidence Citations */
+        .evidence-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-3);
+        }
+
+        .evidence-citation {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-3);
+            padding: var(--space-4);
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius-lg);
+            transition: all 0.2s ease;
+        }
+
+        .evidence-citation:hover {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .evidence-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: var(--space-1);
+        }
+        
+        .evidence-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--gray-600);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .evidence-content {
+            flex: 1;
+        }
+
+        .evidence-title {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--space-1);
+        }
+
+        .evidence-excerpt {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            line-height: var(--line-height-relaxed);
+            margin-bottom: var(--space-2);
+        }
+
+        .evidence-link {
+            font-size: var(--font-size-xs);
+            color: var(--brand-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .evidence-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Patch Plan Stepper */
+        .patch-stepper {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .step {
+            display: flex;
+            gap: var(--space-4);
+        }
+
+        .step-indicator {
+            flex-shrink: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            background: var(--gray-200);
+            color: var(--gray-600);
+        }
+
+        .step.completed .step-indicator {
+            background: var(--status-success);
+            color: white;
+        }
+
+        .step.active .step-indicator {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        .step-content {
+            flex: 1;
+            padding-top: var(--space-1);
+        }
+
+        .step-title {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: var(--space-1);
+        }
+
+        .step-description {
+            font-size: var(--font-size-sm);
+            color: var(--gray-600);
+            line-height: var(--line-height-relaxed);
+        }
+
+        .step-details {
+            margin-top: var(--space-3);
+            padding: var(--space-3);
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--brand-primary);
+        }
+
+        /* Sticky Action Bar */
+        .action-bar {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            border-top: 1px solid var(--gray-200);
+            padding: var(--space-4) var(--space-6);
+            display: flex;
+            gap: var(--space-3);
+            align-items: center;
+        }
+
+        .btn {
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .btn-primary {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--brand-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        /* Activity Timeline */
+        .activity-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: var(--space-3);
+            align-items: flex-start;
+        }
+
+        .timeline-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--status-success);
+            flex-shrink: 0;
+            margin-top: var(--space-1);
+        }
+
+        .timeline-dot.pending {
+            background: var(--status-warning);
+        }
+
+        .timeline-dot.waiting {
+            background: var(--brand-primary);
+            animation: pulse-timeline 2s infinite;
+        }
+
+        @keyframes pulse-timeline {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .timeline-content {
+            flex: 1;
+        }
+
+        .timeline-title {
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--gray-900);
+            margin-bottom: var(--space-1);
+        }
+
+        .timeline-time {
+            font-size: var(--font-size-xs);
+            color: var(--gray-500);
+        }
+
+        /* Skeleton Loading States */
+        .skeleton {
+            background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .skeleton-text {
+            height: 1em;
+            border-radius: var(--radius-sm);
+        }
+
+        .skeleton-circle {
+            border-radius: 50%;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal {
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            width: 90%;
+            max-width: 500px;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+        
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-500);
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+        }
+        
+        .modal-body {
+            padding: var(--space-6);
+        }
+        
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: var(--space-2);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            color: var(--gray-900);
+            transition: all 0.2s ease;
+            font-family: 'SF Mono', Monaco, monospace;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-primary-light);
+        }
+        
+        .form-hint {
+            font-size: var(--font-size-xs);
+            color: var(--gray-500);
+            margin-top: var(--space-2);
+        }
+        
+        .modal-footer {
+            padding: var(--space-6);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: var(--space-3);
+            justify-content: flex-end;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1400px) {
+            .content {
+                flex-direction: column;
+                gap: var(--space-4);
+            }
+            
+            .left-pane, .right-pane {
+                flex: none;
+                max-width: 100%;
+            }
+            
+            .right-pane {
+                max-height: 600px;
+            }
+            
+            .kpi-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .kpi-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .top-controls {
+                display: none;
+            }
+
+            .content {
+                padding: var(--space-4);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+        <div class="logo">PatchOps</div>
+        <div class="top-controls">
+            <div class="control-group">
+                <div class="repo-control">
+                    <select class="repo-selector">
+                        <option>Nightwolf7570/patchops-demo-vulnerable</option>
+                        <option>acme/web-app</option>
+                        <option>company/api-service</option>
+                    </select>
+                    <button class="add-repo-btn" id="addRepoBtn" title="Add Repository">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: white; fill: none; stroke-width: 2.5;">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                    </button>
+                </div>
+                <select class="time-range">
+                    <option>Last 24h</option>
+                    <option>Last 7d</option>
+                    <option>Last 30d</option>
+                </select>
+            </div>
+            <input type="text" class="search-box" placeholder="Search packages, CVEs, or files...">
+            <div class="user-menu">JD</div>
+        </div>
+    </div>
+
+    <div class="main-layout">
+        <!-- Left Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    </div>
+                    Dashboard
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    Alerts
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Analysis</div>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><path d="M10.5 10.5l-5 5M13.5 10.5l5-5"/></svg>
+                    </div>
+                    Dependency Graph
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    </div>
+                    Patch Plans
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                    </div>
+                    Risk Trends
+                </a>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Automation</div>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    Email Actions
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    </div>
+                    Sources
+                </a>
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/></svg>
+                    </div>
+                    Settings
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="left-pane">
+                <!-- KPI Cards -->
+                <div class="kpi-cards">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-label">Active Threats</div>
+                            <div class="kpi-indicator critical"></div>
+                        </div>
+                        <div class="kpi-number">7</div>
+                        <div class="kpi-change">+2 from yesterday</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-label">Known Exploited (KEV)</div>
+                            <div class="kpi-indicator warning"></div>
+                        </div>
+                        <div class="kpi-number">3</div>
+                        <div class="kpi-change">Requires immediate action</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-label">Awaiting Action</div>
+                            <div class="kpi-indicator info"></div>
+                        </div>
+                        <div class="kpi-number">12</div>
+                        <div class="kpi-change">Avg response: 4.2h</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-label">PRs Opened</div>
+                            <div class="kpi-indicator success"></div>
+                        </div>
+                        <div class="kpi-number">5</div>
+                        <div class="kpi-change">This week</div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Dependency Graph -->
+                <div class="graph-container">
+                    <div class="graph-header">
+                        <div>
+                            <h2 class="graph-title">Dependency Graph</h2>
+                            <div class="graph-subtitle">Digital twin of your security posture</div>
+                        </div>
+                        <div class="filter-chips">
+                            <div class="filter-chip active">All</div>
+                            <div class="filter-chip">Critical</div>
+                            <div class="filter-chip">KEV</div>
+                            <div class="filter-chip">Direct</div>
+                            <div class="filter-chip">Affected</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dependency-graph">
+                        <div class="graph-grid"></div>
+                        
+                        <!-- Graph Legend -->
+                        <div class="graph-legend">
+                            <div class="legend-item">
+                                <div class="legend-dot critical"></div>
+                                Critical
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot high"></div>
+                                High
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot medium"></div>
+                                Medium
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-dot low"></div>
+                                Low
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Graph Nodes with Icons -->
+                        <div class="graph-node critical kev selected" style="top: 18%; left: 15%;" 
+                             data-package="axios" data-version="0.19.0" data-cve="CVE-2020-28168" data-score="85">
+                            <svg class="graph-node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="7.5 4.21 12 6.81 16.5 4.21"/><polyline points="7.5 19.79 7.5 14.6 3 12"/><polyline points="21 12 16.5 14.6 16.5 19.79"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                            <span>axios</span>
+                        </div>
+                        <div class="graph-node high" style="top: 48%; left: 12%;" 
+                             data-package="lodash" data-version="4.17.15" data-cve="CVE-2021-23337" data-score="75">
+                            <svg class="graph-node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                            <span>lodash</span>
+                        </div>
+                        <div class="graph-node medium dimmed" style="top: 70%; left: 18%;" 
+                             data-package="express" data-version="4.16.0" data-score="45">
+                            <svg class="graph-node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                            <span>express</span>
+                        </div>
+                        <div class="graph-node low dimmed" style="top: 25%; left: 55%;" 
+                             data-package="react" data-version="17.0.0" data-score="25">
+                            <svg class="graph-node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M6 5a15.3 15.3 0 0 1 12 7 15.3 15.3 0 0 1-12 7 15.3 15.3 0 0 1-12-7 15.3 15.3 0 0 1 12-7z"/></svg>
+                            <span>react</span>
+                        </div>
+                        <div class="graph-node high dimmed" style="top: 68%; left: 52%;" 
+                             data-package="minimist" data-version="1.2.0" data-cve="CVE-2020-7598" data-score="70">
+                            <svg class="graph-node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                            <span>minimist</span>
+                        </div>
+                        <div class="graph-node medium dimmed" style="top: 28%; left: 72%;" 
+                             data-package="webpack" data-version="4.44.0" data-score="40">
+                            <svg class="graph-node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                            <span>webpack</span>
+                        </div>
+                        <div class="graph-node low dimmed" style="top: 55%; left: 72%;" 
+                             data-package="moment" data-version="2.29.0" data-score="20">
+                            <svg class="graph-node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <span>moment</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Pane - Tabbed Detail Panel -->
+            <div class="right-pane">
+                <div class="detail-header">
+                    <div class="package-header">
+                        <div class="package-info">
+                            <h2>axios</h2>
+                            <div class="version-info">0.19.0 → 0.21.2</div>
+                        </div>
+                        <div class="badges">
+                            <span class="badge cve">CVE-2020-28168</span>
+                            <span class="badge kev">KEV</span>
+                        </div>
+                    </div>
+                    <div class="status-pill">
+                        <div class="status-dot"></div>
+                        Awaiting owner action
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" data-tab="overview">Overview</button>
+                    <button class="tab" data-tab="evidence">Evidence</button>
+                    <button class="tab" data-tab="patch">Patch Plan</button>
+                    <button class="tab" data-tab="activity">Activity</button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="tab-content">
+                    <!-- Overview Tab -->
+                    <div class="tab-pane active" id="overview">
+                        <div class="threat-score">
+                            <div class="threat-score-header">
+                                <div class="threat-score-label">Threat Score</div>
+                                <div class="threat-score-value">85/100</div>
+                            </div>
+                            <div class="threat-meter">
+                                <div class="threat-fill" style="width: 85%;"></div>
+                            </div>
+                            <div class="threat-rationale" id="threatRationale">
+                                Select a package to view threat analysis
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Evidence Tab -->
+                    <div class="tab-pane" id="evidence">
+                        <div class="evidence-list">
+                            <div class="evidence-citation">
+                                <div class="evidence-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                </div>
+                                <div class="evidence-content">
+                                    <div class="evidence-title">OSV.dev Advisory</div>
+                                    <div class="evidence-excerpt">Server-Side Request Forgery vulnerability allows attackers to bypass proxy restrictions and access internal resources...</div>
+                                    <a href="#" class="evidence-link">View source →</a>
+                                </div>
+                            </div>
+                            
+                            <div class="evidence-citation">
+                                <div class="evidence-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                                </div>
+                                <div class="evidence-content">
+                                    <div class="evidence-title">CISA KEV Catalog</div>
+                                    <div class="evidence-excerpt">Added to Known Exploited Vulnerabilities catalog due to evidence of active exploitation by threat actors...</div>
+                                    <a href="#" class="evidence-link">View source →</a>
+                                </div>
+                            </div>
+                            
+                            <div class="evidence-citation">
+                                <div class="evidence-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                                </div>
+                                <div class="evidence-content">
+                                    <div class="evidence-title">GitHub Security Advisory</div>
+                                    <div class="evidence-excerpt">GHSA-4w2v-q235-vp99: Axios vulnerable to Server-Side Request Forgery. Affects versions 0.8.1 to 0.21.1...</div>
+                                    <a href="#" class="evidence-link">View source →</a>
+                                </div>
+                            </div>
+                            
+                            <div class="evidence-citation">
+                                <div class="evidence-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                                </div>
+                                <div class="evidence-content">
+                                    <div class="evidence-title">Release Notes</div>
+                                    <div class="evidence-excerpt">Version 0.21.2 includes security fixes for SSRF vulnerability and improved request validation...</div>
+                                    <a href="#" class="evidence-link">View source →</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Patch Plan Tab -->
+                    <div class="tab-pane" id="patch">
+                        <div class="patch-stepper">
+                            <div class="step completed">
+                                <div class="step-indicator">✓</div>
+                                <div class="step-content">
+                                    <div class="step-title">Impact Assessment</div>
+                                    <div class="step-description">Confirmed package usage in 3 critical files</div>
+                                </div>
+                            </div>
+                            
+                            <div class="step active">
+                                <div class="step-indicator">2</div>
+                                <div class="step-content">
+                                    <div class="step-title">Update Dependencies</div>
+                                    <div class="step-description">Update axios to version 0.21.2</div>
+                                    <div class="step-details">
+                                        <strong>Migration Notes:</strong> Minor version bump with backward compatibility. No breaking changes expected for current usage patterns.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <div class="step-indicator">3</div>
+                                <div class="step-content">
+                                    <div class="step-title">Testing & Validation</div>
+                                    <div class="step-description">Run test suite and validate functionality</div>
+                                    <div class="step-details">
+                                        <strong>Test Checklist:</strong>
+                                        <ul style="margin-top: 8px; padding-left: 16px;">
+                                            <li>Authentication flow tests</li>
+                                            <li>API request/response validation</li>
+                                            <li>Error handling verification</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="step">
+                                <div class="step-indicator">4</div>
+                                <div class="step-content">
+                                    <div class="step-title">Deployment</div>
+                                    <div class="step-description">Deploy to production with rollback plan</div>
+                                    <div class="step-details">
+                                        <strong>Rollback Plan:</strong> Revert to axios@0.19.0 if issues detected. Monitor error rates for 24h post-deployment.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Tab -->
+                    <div class="tab-pane" id="activity">
+                        <div class="activity-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Vulnerability detected via Firecrawl scan</div>
+                                    <div class="timeline-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">AI threat analysis completed (Score: 85/100)</div>
+                                    <div class="timeline-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">KEV status confirmed via CISA catalog</div>
+                                    <div class="timeline-time">1 hour ago</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Email notification sent to team@company.com</div>
+                                    <div class="timeline-time">1 hour ago</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-dot waiting"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Awaiting owner response</div>
+                                    <div class="timeline-time">Now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sticky Action Bar -->
+                <div class="action-bar">
+                    <button class="btn btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2;"><circle cx="12" cy="12" r="10"/><polyline points="8 12 12 16 16 12"/><line x1="12" y1="8" x2="12" y2="16"/></svg>
+                        OPEN PR STUB
+                    </button>
+                    <button class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;"><polyline points="20 6 9 17 4 12"/></svg>
+                        ACK
+                    </button>
+                    <button class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        DEFER 7D
+                    </button>
+                    <button class="btn btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        ASSIGN @sarah
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+    
+    <!-- Add Repository Modal -->
+    <div class="modal-overlay" id="addRepoModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Add Repository</h2>
+                <button class="modal-close" id="closeModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2;">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="repoUrl">GitHub Repository</label>
+                    <input 
+                        type="text" 
+                        id="repoUrl" 
+                        class="form-input" 
+                        placeholder="owner/repository"
+                        autocomplete="off"
+                    >
+                    <div class="form-hint">Enter the repository in format: owner/repo (e.g., facebook/react)</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="manifestPath">Manifest Path (Optional)</label>
+                    <input 
+                        type="text" 
+                        id="manifestPath" 
+                        class="form-input" 
+                        placeholder="package.json or Server/package.json"
+                        autocomplete="off"
+                    >
+                    <div class="form-hint">Path to package.json (leave empty for auto-detection)</div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="repoDescription">Description (Optional)</label>
+                    <input 
+                        type="text" 
+                        id="repoDescription" 
+                        class="form-input" 
+                        placeholder="Production API service"
+                        autocomplete="off"
+                    >
+                    <div class="form-hint">Add a description to help identify this repository</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                <button class="btn btn-primary" id="addRepoSubmit">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2;">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Add Repository
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced interactivity with premium UX
+        
+        // Modal functionality
+        const addRepoBtn = document.getElementById('addRepoBtn');
+        const addRepoModal = document.getElementById('addRepoModal');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const addRepoSubmit = document.getElementById('addRepoSubmit');
+        const repoUrlInput = document.getElementById('repoUrl');
+        const manifestPathInput = document.getElementById('manifestPath');
+        const repoDescInput = document.getElementById('repoDescription');
+        
+        // Open modal
+        addRepoBtn.addEventListener('click', () => {
+            addRepoModal.classList.add('active');
+            repoUrlInput.focus();
+        });
+        
+        // Close modal
+        const closeModalFn = () => {
+            addRepoModal.classList.remove('active');
+            repoUrlInput.value = '';
+            manifestPathInput.value = '';
+            repoDescInput.value = '';
+        };
+        
+        closeModal.addEventListener('click', closeModalFn);
+        cancelBtn.addEventListener('click', closeModalFn);
+        
+        // Close on overlay click
+        addRepoModal.addEventListener('click', (e) => {
+            if (e.target === addRepoModal) {
+                closeModalFn();
+            }
+        });
+        
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && addRepoModal.classList.contains('active')) {
+                closeModalFn();
+            }
+        });
+        
+        // Submit new repository
+        addRepoSubmit.addEventListener('click', async () => {
+            const repoUrl = repoUrlInput.value.trim();
+            const manifestPath = manifestPathInput.value.trim();
+            const repoDesc = repoDescInput.value.trim();
+            
+            if (!repoUrl) {
+                repoUrlInput.style.borderColor = 'var(--severity-critical)';
+                return;
+            }
+            
+            // Validate format (owner/repo)
+            if (!repoUrl.match(/^[\w-]+\/[\w-]+$/)) {
+                repoUrlInput.style.borderColor = 'var(--severity-critical)';
+                showNotification('Invalid format. Use: owner/repository', 'error');
+                return;
+            }
+            
+            // Add loading state
+            addRepoSubmit.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2; animation: spin 1s linear infinite;">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M12 2 A10 10 0 0 1 22 12"/>
+                </svg>
+                Analyzing...
+            `;
+            addRepoSubmit.disabled = true;
+            
+            try {
+                // Call your backend API to analyze the repository
+                const response = await fetch('/api/analyze-repository', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        repository: repoUrl,
+                        manifestPath: manifestPath || undefined,
+                        description: repoDesc 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                console.log('✅ API Response:', data);
+                
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Failed to analyze repository');
+                }
+                
+                console.log('📦 Dependencies received:', data.dependencies?.length || 0);
+                console.log('🎯 First dependency:', data.dependencies?.[0]);
+                
+                // Add to dropdown
+                const repoSelector = document.querySelector('.repo-selector');
+                const option = document.createElement('option');
+                option.value = repoUrl;
+                option.textContent = repoUrl;
+                repoSelector.appendChild(option);
+                repoSelector.value = repoUrl;
+                
+                // Close modal
+                closeModalFn();
+                
+                // Reset button
+                addRepoSubmit.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2;">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Add Repository
+                `;
+                addRepoSubmit.disabled = false;
+                
+                const vulnCount = data.kpis.activeThreats;
+                const message = vulnCount > 0 
+                    ? `Found ${vulnCount} vulnerabilities in ${repoUrl}` 
+                    : `Repository ${repoUrl} analyzed - no vulnerabilities found`;
+                showNotification(message, vulnCount > 0 ? 'info' : 'success');
+                
+                // Update the UI with analysis results
+                updateDashboardWithAnalysis(data);
+                
+            } catch (error) {
+                console.error('Error analyzing repository:', error);
+                const errorMsg = error.message || 'Failed to analyze repository. Please try again.';
+                showNotification(errorMsg, 'error');
+                
+                // Reset button
+                addRepoSubmit.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="width: 16px; height: 16px; stroke: white; fill: none; stroke-width: 2;">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Add Repository
+                `;
+                addRepoSubmit.disabled = false;
+            }
+        });
+        
+        // Function to update dashboard with analysis results
+        async function updateDashboardWithAnalysis(data) {
+            console.log('🔄 Updating dashboard with data:', data);
+            
+            // Update KPI cards
+            if (data.kpis) {
+                console.log('📊 Updating KPIs:', data.kpis);
+                document.querySelector('.kpi-card:nth-child(1) .kpi-number').textContent = data.kpis.activeThreats || 0;
+                document.querySelector('.kpi-card:nth-child(2) .kpi-number').textContent = data.kpis.kevCount || 0;
+                document.querySelector('.kpi-card:nth-child(3) .kpi-number').textContent = data.kpis.awaitingAction || 0;
+                document.querySelector('.kpi-card:nth-child(4) .kpi-number').textContent = data.kpis.prsOpened || 0;
+            }
+            
+            // Update dependency graph
+            console.log('📦 Dependencies to display:', data.dependencies?.length || 0);
+            if (data.dependencies && data.dependencies.length > 0) {
+                console.log('🎨 Updating graph with dependencies');
+                await updateDependencyGraph(data.dependencies);
+            } else {
+                console.warn('⚠️ No dependencies to display');
+            }
+            
+            // Update detail panel with first dependency or vulnerability
+            if (data.dependencies && data.dependencies.length > 0) {
+                console.log('📝 Updating detail panel');
+                const firstDep = data.dependencies[0];
+                updateDetailPanel({
+                    package: firstDep.name,
+                    version: firstDep.version,
+                    cve: firstDep.cve || 'No CVE',
+                    score: firstDep.score || 0,
+                    latestVersion: firstDep.latestVersion,
+                    fixedVersion: firstDep.fixedVersion
+                });
+            }
+        }
+        
+        // Fetch latest versions from npm registry via our backend proxy
+        async function fetchLatestVersions(dependencies) {
+            const promises = dependencies.map(async (dep) => {
+                try {
+                    const response = await fetch(`/api/package/${encodeURIComponent(dep.name)}/latest`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            dep.latestVersion = data.version;
+                            console.log(`📦 ${dep.name}: current ${dep.version}, latest ${data.version}`);
+                        }
+                    } else {
+                        console.warn(`❌ Failed to fetch ${dep.name}: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.warn(`❌ Error fetching ${dep.name}:`, error.message);
+                }
+            });
+            
+            await Promise.all(promises);
+            console.log('✅ All versions fetched');
+        }
+        
+        // Function to update dependency graph with new nodes
+        async function updateDependencyGraph(dependencies) {
+            const graphContainer = document.querySelector('.dependency-graph');
+            
+            // Clear existing nodes (keep legend and grid)
+            const existingNodes = graphContainer.querySelectorAll('.graph-node');
+            existingNodes.forEach(node => node.remove());
+            
+            console.log('🔄 Fetching latest versions from npm...');
+            
+            // Fetch latest versions for all packages
+            await fetchLatestVersions(dependencies);
+            
+            console.log('✅ Latest versions fetched, creating nodes...');
+            
+            // Different icons for different package types
+            const packageIcons = {
+                'express': '<path d="M23 12l-2.44-2.78.34-3.68-3.61-.82-1.89-3.18L12 3 8.6 1.54 6.71 4.72l-3.61.81.34 3.68L1 12l2.44 2.78-.34 3.69 3.61.82 1.89 3.18L12 21l3.4 1.46 1.89-3.18 3.61-.82-.34-3.68L23 12z"/>',
+                'react': '<circle cx="12" cy="12" r="3"/><path d="M12 1a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M6 5a15.3 15.3 0 0 1 12 7 15.3 15.3 0 0 1-12 7 15.3 15.3 0 0 1-12-7 15.3 15.3 0 0 1 12-7z"/>',
+                'axios': '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="7.5 4.21 12 6.81 16.5 4.21"/><polyline points="7.5 19.79 7.5 14.6 3 12"/><polyline points="21 12 16.5 14.6 16.5 19.79"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+                'lodash': '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+                'webpack': '<polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
+                'mysql': '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
+                'mysql2': '<rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>',
+                'mongodb': '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12 6v6l4 2"/>',
+                'dotenv': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>',
+                'cors': '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+                'joi': '<path d="M12 2L2 7l10 5 10-5-10-5z"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>',
+                'nodemon': '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+                'ws': '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="10" x2="15" y2="10"/>',
+                'body-parser': '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+                'moment': '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+                'default': '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>'
+            };
+            
+            // Create new nodes from analysis data
+            dependencies.forEach((dep, index) => {
+                const node = document.createElement('div');
+                const positions = [
+                    { top: '18%', left: '12%' },
+                    { top: '48%', left: '12%' },
+                    { top: '70%', left: '18%' },
+                    { top: '25%', left: '55%' },
+                    { top: '68%', left: '52%' },
+                    { top: '28%', left: '72%' },
+                    { top: '55%', left: '72%' },
+                    { top: '40%', left: '38%' },
+                    { top: '15%', left: '38%' },
+                    { top: '75%', left: '38%' },
+                    { top: '35%', left: '65%' },
+                    { top: '60%', left: '25%' },
+                    { top: '10%', left: '50%' },
+                    { top: '85%', left: '50%' },
+                    { top: '50%', left: '85%' },
+                    { top: '22%', left: '25%' },
+                    { top: '78%', left: '65%' },
+                    { top: '45%', left: '5%' },
+                    { top: '32%', left: '18%' },
+                    { top: '62%', left: '78%' }
+                ];
+                
+                const pos = positions[index % positions.length];
+                const severityClass = dep.severity || 'low';
+                const isKev = dep.isKev ? 'kev' : '';
+                const isSelected = index === 0 ? 'selected' : 'dimmed';
+                
+                node.className = `graph-node ${severityClass} ${isKev} ${isSelected}`;
+                node.style.top = pos.top;
+                node.style.left = pos.left;
+                node.dataset.package = dep.name;
+                node.dataset.version = dep.version;
+                node.dataset.cve = dep.cve || '';
+                node.dataset.score = dep.score || 0;
+                
+                // Get icon for this package
+                const iconPath = packageIcons[dep.name.toLowerCase()] || packageIcons['default'];
+                
+                node.innerHTML = `
+                    <svg class="graph-node-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        ${iconPath}
+                    </svg>
+                    <span>${dep.name}</span>
+                `;
+                
+                // Add click handler
+                node.addEventListener('click', function() {
+                    document.querySelectorAll('.graph-node').forEach(n => {
+                        n.classList.remove('selected');
+                        n.classList.add('dimmed');
+                    });
+                    this.classList.add('selected');
+                    this.classList.remove('dimmed');
+                    updateDetailPanel(this.dataset);
+                });
+                
+                // Add hover tooltip
+                node.addEventListener('mouseenter', function(e) {
+                    const data = this.dataset;
+                    const tooltipText = `${data.package}@${data.version}${data.cve ? ' • ' + data.cve : ''} • Score: ${data.score}`;
+                    const tooltip = document.getElementById('tooltip');
+                    tooltip.textContent = tooltipText;
+                    tooltip.classList.add('visible');
+                    const rect = this.getBoundingClientRect();
+                    tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
+                    tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
+                });
+                
+                node.addEventListener('mouseleave', function() {
+                    document.getElementById('tooltip').classList.remove('visible');
+                });
+                
+                graphContainer.appendChild(node);
+            });
+            
+            // Select first node
+            if (dependencies.length > 0) {
+                const firstNode = graphContainer.querySelector('.graph-node');
+                if (firstNode) {
+                    firstNode.click();
+                }
+            }
+        }
+        
+        // Enter key to submit
+        repoUrlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                addRepoSubmit.click();
+            }
+        });
+        
+        // Reset border color on input
+        repoUrlInput.addEventListener('input', () => {
+            repoUrlInput.style.borderColor = '';
+        });
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const targetTab = this.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Update active tab pane
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                document.getElementById(targetTab).classList.add('active');
+            });
+        });
+
+        // Enhanced graph node interactions
+        const tooltip = document.getElementById('tooltip');
+        
+        document.querySelectorAll('.graph-node').forEach(node => {
+            // Click to select
+            node.addEventListener('click', function() {
+                // Remove previous selection
+                document.querySelectorAll('.graph-node').forEach(n => {
+                    n.classList.remove('selected');
+                    n.classList.add('dimmed');
+                });
+                
+                // Select current node and neighbors
+                this.classList.add('selected');
+                this.classList.remove('dimmed');
+                
+                // Simulate neighbor highlighting (in real app, this would use actual graph data)
+                const neighbors = ['axios', 'lodash']; // Mock neighbors
+                document.querySelectorAll('.graph-node').forEach(n => {
+                    if (neighbors.includes(n.dataset.package)) {
+                        n.classList.remove('dimmed');
+                    }
+                });
+                
+                // Update detail panel
+                updateDetailPanel(this.dataset);
+                
+                // Highlight relevant edges
+                document.querySelectorAll('.graph-edge').forEach(edge => {
+                    edge.classList.add('highlighted');
+                });
+            });
+            
+            // Hover tooltip
+            node.addEventListener('mouseenter', function(e) {
+                const data = this.dataset;
+                const tooltipText = `${data.package}@${data.version}${data.cve ? ' • ' + data.cve : ''} • Score: ${data.score}`;
+                
+                tooltip.textContent = tooltipText;
+                tooltip.classList.add('visible');
+                
+                // Position tooltip
+                const rect = this.getBoundingClientRect();
+                tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + 'px';
+                tooltip.style.top = rect.top - tooltip.offsetHeight - 10 + 'px';
+            });
+            
+            node.addEventListener('mouseleave', function() {
+                tooltip.classList.remove('visible');
+            });
+        });
+
+        // Filter chips
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Simulate filtering (in real app, this would filter the graph)
+                const filter = this.textContent.toLowerCase();
+                console.log('Filtering by:', filter);
+            });
+        });
+
+        // Action buttons with enhanced feedback
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Add loading state
+                const originalText = this.textContent;
+                this.textContent = '⏳ Processing...';
+                this.disabled = true;
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.disabled = false;
+                    
+                    if (this.textContent.includes('OPEN PR')) {
+                        showNotification('PR creation initiated for axios security update', 'success');
+                    } else if (this.textContent.includes('ACK')) {
+                        showNotification('Vulnerability acknowledged', 'success');
+                    } else if (this.textContent.includes('DEFER')) {
+                        showNotification('Deferred for 7 days', 'info');
+                    } else if (this.textContent.includes('ASSIGN')) {
+                        showNotification('Assigned to @sarah', 'info');
+                    }
+                }, 1500);
+            });
+        });
+
+        // Update detail panel based on selected node
+        function updateDetailPanel(data) {
+            document.querySelector('.package-info h2').textContent = data.package;
+            
+            // Update version info dynamically
+            const versionEl = document.querySelector('.version-info');
+            const currentVersion = data.version.replace(/[\^~]/, ''); // Remove ^ or ~
+            const score = parseInt(data.score) || 0;
+            const latestVersion = data.latestVersion;
+            
+            if (score > 0 && data.fixedVersion && data.fixedVersion !== 'null') {
+                // Has vulnerability with known fix
+                versionEl.textContent = `${currentVersion} → ${data.fixedVersion}`;
+                versionEl.style.color = 'var(--severity-high)';
+            } else if (latestVersion && latestVersion !== currentVersion) {
+                // No vulnerability but newer version available
+                versionEl.textContent = `${currentVersion} → ${latestVersion} available`;
+                versionEl.style.color = 'var(--brand-primary)';
+            } else if (latestVersion) {
+                // Up to date
+                versionEl.textContent = `${currentVersion} (latest)`;
+                versionEl.style.color = 'var(--status-success)';
+            } else if (score > 0) {
+                // Has vulnerability but no fix available yet
+                versionEl.textContent = `${currentVersion} (vulnerable)`;
+                versionEl.style.color = 'var(--severity-critical)';
+            } else {
+                // Unknown status
+                versionEl.textContent = currentVersion;
+                versionEl.style.color = 'var(--gray-600)';
+            }
+            
+            document.querySelector('.threat-score-value').textContent = `${data.score}/100`;
+            document.querySelector('.threat-fill').style.width = `${data.score}%`;
+            
+            // Update badges
+            const badgesContainer = document.querySelector('.badges');
+            badgesContainer.innerHTML = '';
+            if (data.cve && data.cve !== 'null') {
+                badgesContainer.innerHTML += `<span class="badge cve">${data.cve}</span>`;
+            }
+            if (data.score > 80) {
+                badgesContainer.innerHTML += `<span class="badge kev">KEV</span>`;
+            }
+            
+            // Update threat rationale dynamically
+            const rationaleEl = document.getElementById('threatRationale');
+            
+            if (score === 0) {
+                if (latestVersion && latestVersion !== currentVersion) {
+                    rationaleEl.textContent = `${data.package} has no known vulnerabilities but a newer version (${latestVersion}) is available. Consider updating during regular maintenance.`;
+                } else {
+                    rationaleEl.textContent = `${data.package} is up to date with no known vulnerabilities. Continue monitoring for new security advisories.`;
+                }
+            } else if (score < 30) {
+                rationaleEl.textContent = `Low severity vulnerability detected. ${data.cve ? data.cve + ' - ' : ''}Package should be updated during regular maintenance cycles.`;
+            } else if (score < 60) {
+                rationaleEl.textContent = `Medium severity vulnerability. ${data.cve ? data.cve + ' - ' : ''}Recommended to update within the next sprint. Monitor for exploitation activity.`;
+            } else if (score < 80) {
+                rationaleEl.textContent = `High severity vulnerability detected. ${data.cve ? data.cve + ' - ' : ''}Priority update recommended. Package may be exploitable in production environments.`;
+            } else {
+                rationaleEl.textContent = `Critical vulnerability with high threat score (${score}/100). ${data.cve ? data.cve + ' - ' : ''}Immediate action required. ${data.score > 80 ? 'KEV listing indicates active threat actor usage. ' : ''}Package is directly imported and significantly increases attack surface.`;
+            }
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const bgColor = type === 'success' ? 'var(--status-success)' : 
+                           type === 'error' ? 'var(--severity-critical)' : 
+                           'var(--brand-primary)';
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${bgColor};
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: var(--shadow-lg);
+                z-index: 1000;
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize with axios selected
+        const axiosNode = document.querySelector('.graph-node[data-package="axios"]');
+        if (axiosNode) {
+            axiosNode.click();
+        }
+        
+        // Sidebar navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Update active state
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                const text = this.textContent.trim();
+                
+                // Handle different navigation items
+                switch(text) {
+                    case 'Dashboard':
+                        showNotification('Dashboard view (current)', 'info');
+                        break;
+                    case 'Alerts':
+                        showNotification('Alerts view - Coming soon', 'info');
+                        break;
+                    case 'Dependency Graph':
+                        showNotification('Dependency Graph view (current)', 'info');
+                        break;
+                    case 'Patch Plans':
+                        showNotification('Patch Plans view - Coming soon', 'info');
+                        break;
+                    case 'Risk Trends':
+                        showNotification('Risk Trends view - Coming soon', 'info');
+                        break;
+                    case 'Email Actions':
+                        showNotification('Email Actions - Coming soon', 'info');
+                        break;
+                    case 'Sources':
+                        showNotification('Intelligence Sources - Coming soon', 'info');
+                        break;
+                    case 'Settings':
+                        showNotification('Settings - Coming soon', 'info');
+                        break;
+                    default:
+                        console.log('Navigation:', text);
+                }
+            });
+        });
+        
+        // Filter chips functionality
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                
+                const filter = this.textContent.toLowerCase().trim();
+                const nodes = document.querySelectorAll('.graph-node');
+                
+                console.log('Filtering by:', filter);
+                
+                if (filter === 'all') {
+                    // Show all nodes
+                    nodes.forEach(node => {
+                        node.style.display = '';
+                        node.classList.remove('dimmed');
+                    });
+                } else if (filter === 'critical') {
+                    // Show only critical severity
+                    nodes.forEach(node => {
+                        if (node.classList.contains('critical')) {
+                            node.style.display = '';
+                            node.classList.remove('dimmed');
+                        } else {
+                            node.style.display = 'none';
+                        }
+                    });
+                } else if (filter === 'kev') {
+                    // Show only KEV
+                    nodes.forEach(node => {
+                        if (node.classList.contains('kev')) {
+                            node.style.display = '';
+                            node.classList.remove('dimmed');
+                        } else {
+                            node.style.display = 'none';
+                        }
+                    });
+                } else if (filter === 'direct') {
+                    // Show direct dependencies (for now, show all)
+                    nodes.forEach(node => {
+                        node.style.display = '';
+                        node.classList.remove('dimmed');
+                    });
+                } else if (filter === 'affected') {
+                    // Show affected packages (those with vulnerabilities)
+                    nodes.forEach(node => {
+                        const score = parseInt(node.dataset.score) || 0;
+                        if (score > 0) {
+                            node.style.display = '';
+                            node.classList.remove('dimmed');
+                        } else {
+                            node.style.display = 'none';
+                        }
+                    });
+                }
+                
+                showNotification(`Filtered by: ${this.textContent}`, 'info');
+            });
+        });
+        
+        // DEBUG: Test function
+        window.testUpdate = function() {
+            console.log('🧪 Testing update function...');
+            fetch('/api/analyze-repository', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ repository: 'Nailfighter/Restaurant-Ordering-System' })
+            })
+            .then(r => r.json())
+            .then(data => {
+                console.log('✅ Got data:', data);
+                updateDashboardWithAnalysis(data);
+            })
+            .catch(err => console.error('❌ Error:', err));
+        };
+        console.log('💡 Debug: Run testUpdate() in console to manually test');
+    </script>
+</body>
+</html>
