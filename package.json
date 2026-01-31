@@ -8,10 +8,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "axios": "0.19.0",
+    "axios": "0.21.1",
     "lodash": "4.17.15"
   },
-  "keywords": ["demo", "vulnerable", "security"],
+  "keywords": [
+    "demo",
+    "vulnerable",
+    "security"
+  ],
   "author": "PatchOps Demo",
   "license": "MIT"
 }
