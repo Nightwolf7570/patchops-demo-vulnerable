@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "axios": "0.19.0",
-    "lodash": "4.17.15",
+    "lodash": ">=4.17.21",
     "express": "4.16.0",
     "minimist": "1.2.5",
     "node-fetch": "2.6.0",
@@ -24,7 +24,11 @@
     "ajv": "6.10.0",
     "marked": "0.7.0"
   },
-  "keywords": ["demo", "vulnerable", "security"],
+  "keywords": [
+    "demo",
+    "vulnerable",
+    "security"
+  ],
   "author": "PatchOps Demo",
   "license": "MIT"
 }
