@@ -9,9 +9,13 @@
   },
   "dependencies": {
     "axios": "0.19.0",
-    "lodash": "4.17.15"
+    "lodash": "4.17.19"
   },
-  "keywords": ["demo", "vulnerable", "security"],
+  "keywords": [
+    "demo",
+    "vulnerable",
+    "security"
+  ],
   "author": "PatchOps Demo",
   "license": "MIT"
 }
